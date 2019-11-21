@@ -1,0 +1,120 @@
+<div class="razor-admin-extensions" ng-init="loadExtensions()">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="accordian ng-cloak" ng-controller="extensionsListAccordion" ng-if="user.access_level > 8">
+				<div class="filter row">
+					<div class="col-sm-3">
+						<button class="btn btn-primary" ng-click="searchExtensions()"><i class="fa fa-cogs"></i> Install Extensions</button>
+					</div>
+					<div class="col-sm-6">
+						<div class="input-group">
+	  						<span class="input-group-addon">Filter</span>
+							<input class="form-control" ng-model="searchFilter" placeholder="Search to filter" />
+						</div>
+					</div>
+					<div class="col-sm-3">
+						<div class="input-group">
+							<span class="input-group-addon">Limit</span>
+							<input class="form-control" ng-model="searchLimit" ng-init="searchLimit = 50" type="number"/>
+						</div>
+					</div>
+				</div>
+				<accordion close-others="oneAtATime">
+					<accordion-group ng-repeat="e in extensions | orderBy:['type', 'name'] | filter:searchFilter | limitTo:searchLimit" is-open="isopen">
+						<accordion-heading>
+							<i class="category-icon fa fa-fw" ng-class="(cats.categories | filter:e.type:name)[0].icon"></i>
+							{{e.name}}
+							<i class="expander pull-right fa" ng-class="{'fa-chevron-down': isopen, 'fa-chevron-right': !isopen}"></i>
+						</accordion-heading>
+						<div class="content">
+							<div class="loader" ng-if="isopen" ng-init="getExtensionDetails(e)"></div>
+							<h3>
+								Details
+								<button class="btn btn-danger pull-right" ng-click="removeExtension(e)"><i class="fa fa-trash-o"></i> Remove</button>
+							</h3>
+							<div class="row">
+								<div class="col-sm-6">
+									<table class="table table-condensed table-striped table-bordered">
+										<tbody>
+											<tr>
+												<td>Extension</td>
+												<td>{{e.extension}}</td>
+											</tr>
+											<tr>
+												<td>Author</td>
+												<td>{{e.handle}}</td>
+											</tr>
+											<tr>
+												<td>Type</td>
+												<td>{{e.type}}</td>
+											</tr>
+											<tr ng-if="e.version">
+												<td>Version</td>
+												<td>{{e.version}} <i class="fa fa-exclamation-triangle red" ng-if="extensionDetails.version > e.version" tooltip="New version available"></i></td>
+											</tr>
+											<tr ng-if="e.created">
+												<td>Created</td>
+												<td>{{e.created * 1000 | date:'EEE, MMM d, y'}}</td>
+											</tr>
+											<tr>
+												<td>Description</td>
+												<td>{{e.description}}</td>
+											</tr>
+										</tbody>
+									</table>
+									<div class="layouts" ng-repeat="l in e.layouts" ng-if="e.layouts">
+										<h4>{{l.layout}}</h4>
+										<table class="table table-condensed table-striped table-bordered">
+											<tbody>
+												<tr>
+													<td>Version</td>
+													<td>{{l.version}} <i class="fa fa-exclamation-triangle red" ng-if="extensionDetails.version > l.version" tooltip="New version available"></i></td>
+												</tr>
+												<tr>
+													<td>Created</td>
+													<td>{{l.created * 1000 | date:'EEE, MMM d, y'}}</td>
+												</tr>
+												<tr><td>Menus</td><td><span ng-repeat="menu in l.menus">{{($index > 0 ? ', ' + menu : menu)}}</span></td></tr>
+												<tr><td>Header Columns</td><td>{{l.content.header}}</td></tr>
+												<tr><td>Main Columns</td><td>{{l.content.main}}</td></tr>
+												<tr><td>Footer Columns</td><td>{{l.content.footer}}</td></tr>
+											</tbody>
+										</table>
+									</div>
+									<h3 ng-if="e.settings">Settings</h3>
+									<form name="form" class="form-horizontal" role="form" ng-if="e.settings" novalidate>
+										<div class="form-group" ng-repeat="setting in e.settings" ng-form="subForm">
+											<label class="col-sm-3 control-label">
+												{{(setting.label ? setting.label : setting.name)}}
+											</label>
+											<div class="col-sm-7">
+												<input name="input" class="form-control" type="text" ng-model="setting.value" placeholder="{{setting.placeholder}}" ng-pattern="{{setting.regex.substring(0, 1) == '/' ? setting.regex.substring(1, setting.regex.length -1) : setting.regex}}">
+											</div>
+											<div class="col-sm-2 error-block ng-cloak" ng-show="subForm.input.$dirty && subForm.input.$invalid">
+												<span class="alert alert-danger alert-form" ng-show="subForm.input.$error.pattern">Invalid</span>
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="col-sm-offset-3 col-sm-7">
+												<button type="submit" class="btn btn-success" ng-click="saveSettings(e)" ng-disabled="form.$dirty && form.$invalid">
+													<i class="fa fa-check"></i>
+													Save Settings
+												</button>
+											</div>
+										</div>
+									</form>
+								</div>
+								<div class="col-sm-6">
+									<div ng-if="(exts.extensions | filter:{'type': e.type, 'handle': e.handle, 'extension': e.extension})[0].images">
+										<button class="btn btn-default" ng-repeat="img in (exts.extensions | filter:{'type': e.type, 'handle': e.handle, 'extension': e.extension})[0].images" ng-click="$parent.screenshot = img" style="margin: 0 5px 5px 0;">{{$index + 1}}</button>
+										<img ng-src="{{screenshot}}" width="100%" ng-init="screenshot = (exts.extensions | filter:{'type': e.type, 'handle': e.handle, 'extension': e.extension})[0].images[0]">
+									</div>
+								</div>
+							</div>
+						</div>
+					</accordion-group>
+				</accordion>
+			</div>
+		</div>
+	</div>
+</div>

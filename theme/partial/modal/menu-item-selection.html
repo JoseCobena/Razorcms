@@ -1,0 +1,75 @@
+<form name="form" class="form-horizontal" role="form" novalidate>
+	<div class="modal-header">
+		<h3>Add Menu Item <i class="fa fa-times pull-right" ng-click="cancel()"></i></h3>
+	</div>
+	<div class="modal-body">
+		<tabset>
+			<tab heading="Page" select="$parent.$parent.selected = 'page'">
+				<div class="accordian" ng-controller="menuItemListAccordion">
+					<div class="filter row">
+						<div class="col-sm-8">
+							<div class="input-group">
+								<span class="input-group-addon">Filter</span>
+								<input class="form-control" ng-model="searchFilter" placeholder="Search to filter" />
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="input-group">
+								<span class="input-group-addon">Limit</span>
+								<input class="form-control" ng-model="searchLimit" ng-init="searchLimit = 25" type="number"/>
+							</div>
+						</div>
+					</div>
+					<accordion close-others="oneAtATime">
+						<accordion-group ng-repeat="page in pages | orderBy:'name' | filter:searchFilter | limitTo:searchLimit" is-open="isopen">
+							<accordion-heading>
+								<button class="btn btn-sm btn-default" ng-click="addMenuItem(page)"><i class="fa fa-plus"></i></button>
+								<i class="fa fa-eye-slash" ng-hide="page.active" title="Active"></i>
+								{{page.name}}
+								<i class="expander pull-right fa button-heading" ng-class="{'fa-chevron-down': isopen, 'fa-chevron-right': !isopen}"></i>
+							</accordion-heading>
+							<div class="content">
+								<div class="page-preview for-menu">
+									<iframe ng-src="{{loadPreview(page.link)}}" ng-if="isopen"></iframe>
+									<div class="preview-mask"></div>
+								</div>
+							</div>
+						</accordion-group>
+					</accordion>
+				</div>
+			</tab>
+
+			<tab heading="URL" select="$parent.$parent.selected = 'url'">
+				<div class="form-group">
+					<label for="url-link" class="col-sm-3 control-label">URL</label>
+					<div class="col-sm-7">
+						<input id="url-link" name="urlLink" class="form-control" type="text" ng-model="$parent.$parent.url.link" placeholder="http://www.somelink.co.uk" ng-disabled="processing">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="url-label" class="col-sm-3 control-label">Label</label>
+					<div class="col-sm-7">
+						<input id="url-label" name="urlLabel" class="form-control" type="text" ng-model="$parent.$parent.url.label" placeholder="Some Link Label" ng-disabled="processing" required>
+					</div>
+					<div class="col-sm-2 error-block" ng-show="form.urlLabel.$dirty && form.urlLabel.$invalid">
+						<span class="alert alert-danger alert-form" ng-show="form.urlLabel.$error.pattern">Invalid</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="url-target" class="col-sm-3 control-label">Target</label>
+					<div class="col-sm-7">
+						<select ng-init="$parent.$parent.url.target = ''" class="form-control" id="url-target" ng-model="$parent.$parent.url.target" ng-disabled="processing">
+							<option value="">Same Window/Tab</option>
+							<option value="_blank">New Window/Tab</option>
+						</select>
+					</div>
+				</div>
+			</tab>
+		</tabset>
+	</div>
+	<div class="modal-footer" ng-if="selected == 'url'">
+		<button class="btn btn-success" ng-click="close(url)" ng-disabled="form.$invalid || processing">
+			<i class="fa fa-check"></i> Add URL
+		</button>
+	</div>
+</form>

@@ -1,0 +1,13 @@
+[06-Jan-2015 19:51:40 Europe/Oslo] PHP Parse error:  syntax error, unexpected '[' in /home/snoopple/ulsmith/rars/api/content/editor.php on line 113
+[06-Jan-2015 20:09:34 Europe/Oslo] PHP Fatal error:  Class 'RazorDB' not found in /home/snoopple/ulsmith/storage/tmp/package/system_upgrade_post_install.php on line 38
+[25-Jan-2015 12:23:33 Europe/Oslo] PHP Fatal error:  Class 'RazorDB' not found in /home/snoopple/ulsmith/rars/api/tools/email.php on line 54
+[15-Feb-2015 10:33:39 Europe/Oslo] PHP Parse error:  syntax error, unexpected '[' in /home/snoopple/ulsmith/rars/api/page/copy.php on line 44
+[15-Feb-2015 10:34:05 Europe/Oslo] PHP Parse error:  syntax error, unexpected '[' in /home/snoopple/ulsmith/rars/api/page/copy.php on line 44
+[15-Feb-2015 10:34:36 Europe/Oslo] PHP Parse error:  syntax error, unexpected '[' in /home/snoopple/ulsmith/rars/api/page/copy.php on line 44
+[15-Feb-2015 10:39:48 Europe/Oslo] PHP Parse error:  syntax error, unexpected '[' in /home/snoopple/ulsmith/rars/api/page/copy.php on line 44
+[15-Feb-2015 10:55:24 Europe/Oslo] PHP Parse error:  syntax error, unexpected '[' in /home/snoopple/ulsmith/rars/api/page/copy.php on line 44
+[15-Feb-2015 10:56:27 Europe/Oslo] PHP Parse error:  syntax error, unexpected '[' in /home/snoopple/ulsmith/rars/api/page/copy.php on line 44
+[15-Feb-2015 11:01:17 Europe/Oslo] PHP Parse error:  syntax error, unexpected '[' in /home/snoopple/ulsmith/rars/api/page/copy.php on line 48
+[28-Feb-2015 15:32:08 Europe/Oslo] PHP Fatal error:  Class 'RazorDB' not found in /home/snoopple/ulsmith/rars/api/tools/email.php on line 54
+[10-Mar-2015 22:04:26 Europe/Oslo] PHP Fatal error:  Class 'RazorDB' not found in /home/snoopple/ulsmith/rars/api/tools/email.php on line 54
+[10-Mar-2015 22:05:14 Europe/Oslo] PHP Fatal error:  Class 'RazorDB' not found in /home/snoopple/ulsmith/rars/api/tools/email.php on line 54

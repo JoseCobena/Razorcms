@@ -1,0 +1,142 @@
+<div class="razor-admin-settings">
+	<div class="row">
+		<div class="col-sm-12">
+			<form name="form" class="form-horizontal" role="form" novalidate ng-if="user.access_level > 8">
+				<div class="form-group">
+					<label for="system-version" class="col-sm-3 control-label">System Version</label>
+					<div class="col-sm-7">
+						<span class="system-version">
+							<span>{{system.version}}.{{system.milestone}}.{{system.release}}</span>
+							<span class="alert alert-info" ng-hide="upgrade || noUpgrade || error">
+								<i class="fa fa-refresh"></i>
+								Checking version...
+							</span>
+							<span class="alert alert-success" ng-show="noUpgrade">
+								<i class="fa fa-check"></i>
+								Latest version installed.
+							</span>
+							<span class="alert alert-danger" ng-show="upgrade">
+								<i class="fa fa-times"></i>
+								Please upgrade to {{latestVersion.version}}.{{latestVersion.milestone}}.{{latestVersion.release}}.
+							</span>
+							<span class="alert alert-info" ng-show="error">
+								<i class="fa fa-exclamation-triangle"></i>
+								Cannot contact server, try again later.
+							</span>
+						</span>
+						<button class="btn btn-warning pull-right" ng-click="upgradeVersion()" ng-show="upgrade"><i class="fa fa-gears"></i> Upgrade</button>
+					</div>
+					<div class="col-sm-2 error-block" ng-show="form.name.$dirty && form.name.$invalid">
+						<span class="alert alert-danger alert-form" ng-show="form.name.$error.required">Required</span>
+					</div>
+				</div>
+				<div class="form-group" ng-if="site.dev_mode === true || site.dev_mode === false">
+					<label class="col-sm-3 control-label">Development Mode</label>
+					<div class="col-sm-2">
+						<slide-switch rzr-model="site.dev_mode"></slide-switch>
+					</div>
+					<div class="col-sm-5">
+						<p ng-if="!site.dev_mode" class="alert alert-success alert-inline-message">Standard mode, error message hidden from user.</p>
+						<p ng-if="site.dev_mode" class="alert alert-danger alert-inline-message">Development mode, error message show to user.</p>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="site-name" class="col-sm-3 control-label">Site Name</label>
+					<div class="col-sm-7">
+						<input id="site-name" name="name" class="form-control" type="text" ng-model="site.name" placeholder="Shows in browser tab" required>
+					</div>
+					<div class="col-sm-2 error-block" ng-show="form.name.$dirty && form.name.$invalid">
+						<span class="alert alert-danger alert-form" ng-show="form.name.$error.required">Required</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="icon-position" class="col-sm-3 control-label">razorCMS Icon Position</label>
+					<div class="col-sm-7">
+						<select class="form-control" ng-model="site.icon_position">
+							<option value="tl">Top Left</option>
+							<option value="hl">High Left</option>
+							<option value="ml">Middle Left</option>
+							<option value="ll">Low Left</option>
+							<option value="bl">Bottom Left</option>
+							<option value="tr">Top Right</option>
+							<option value="hr">High Right</option>
+							<option value="mr">Middle Right</option>
+							<option value="lr">Low Right</option>
+							<option value="br">Bottom Right</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="google-analytics-code" class="col-sm-3 control-label">Google Analytics Code</label>
+					<div class="col-sm-7">
+						<input id="google-analytics-code" name="googleAnalyticsCode" class="form-control" type="text" ng-model="site.google_analytics_code" placeholder="Use google anlytics to track users">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="forgot-password-email" class="col-sm-3 control-label">Forgot Password Email</label>
+					<div class="col-sm-7">
+						<textarea rows="4" id="forgot-password-email" name="forgotPasswordEmail" class="form-control" type="text" ng-model="site.forgot_password_email" placeholder="Email that is sent when people request password reset. **server_name**, **user_email**, **forgot_password_link** can all be used to live data to the email."></textarea>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">Allow Registration</label>
+					<div class="col-sm-2">
+						<slide-switch rzr-model="site.allow_registration"></slide-switch>
+					</div>
+					<div class="col-sm-5">
+						<p ng-if="site.allow_registration" class="alert alert-danger alert-inline-message">Public can register user accounts from login page.</p>
+						<p ng-if="!site.allow_registration" class="alert alert-success alert-inline-message">User accounts can only be created by super admin.</p>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">Manual Activation</label>
+					<div class="col-sm-2">
+						<slide-switch rzr-model="site.manual_activation" rzr-disabled="!site.allow_registration"></slide-switch>
+					</div>
+					<div class="col-sm-5" ng-if="site.allow_registration">
+						<p ng-if="!site.manual_activation" class="alert alert-danger alert-inline-message">Public activate accounts from email link.</p>
+						<p ng-if="site.manual_activation" class="alert alert-success alert-inline-message">Super admin must activate all new users.</p>
+					</div>
+				</div>
+				<div class="form-group" ng-if="site.allow_registration && site.manual_activation">
+					<label for="registration-email" class="col-sm-3 control-label">Registration Email</label>
+					<div class="col-sm-7">
+						<textarea rows="4" id="registration-email" name="registrationEmail" class="form-control" type="text" ng-model="site.registration_email" placeholder="Email that is sent when people register account. **server_name**, **user_email** can all be used to live data to the email."></textarea>
+					</div>
+				</div>
+				<div class="form-group" ng-if="site.allow_registration && !site.manual_activation">
+					<label for="activation-email" class="col-sm-3 control-label">Activation Email</label>
+					<div class="col-sm-7">
+						<textarea rows="4" id="activation-email" name="activationEmail" class="form-control" type="text" ng-model="site.activation_email" placeholder="Email that is sent when people register account and it needs acitvating. **server_name**, **user_email**, **activation_link** can all be used to live data to the email."></textarea>
+					</div>
+				</div>
+				<div class="form-group" ng-if="site.allow_registration && site.manual_activation">
+					<label for="activate-user-email" class="col-sm-3 control-label">Activate User Email</label>
+					<div class="col-sm-7">
+						<textarea rows="4" id="activate-user-email" name="activateUserEmail" class="form-control" type="text" ng-model="site.activate_user_email" placeholder="Email that is sent to super admin to tell them user needs activating"></textarea>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="cookie-message" class="col-sm-3 control-label">Cookie Message</label>
+					<div class="col-sm-7">
+						<textarea rows="4" id="cookie-message" name="cookieMessage" class="form-control" type="text" ng-model="site.cookie_message" placeholder="Add a cookie message that users have to accept, leave blank to turn this off"></textarea>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="cookie-message-button" class="col-sm-3 control-label">Cookie Message Button</label>
+					<div class="col-sm-7">
+						<input id="cookie-message-button" name="cookieMessageButton" class="form-control" type="text" ng-model="site.cookie_message_button" placeholder="Add text to a cookie button that removes message, leave blank to turn this off">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-3 col-sm-7">
+						<button type="submit" class="btn btn-success" ng-click="save()" ng-disabled="form.$invalid || processing">
+							<i class="fa fa-check"></i>
+							Save Settings
+						</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

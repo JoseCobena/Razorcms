@@ -1,0 +1,71 @@
+<div class="modal-header">
+	<h3>Choose a Theme <i class="fa fa-times pull-right" ng-click="cancel()"></i></h3>
+</div>
+<div class="modal-body">
+	<div class="accordian" ng-controller="themeListAccordion">
+		<div class="filter row">
+			<div class="col-sm-8">
+				<div class="input-group">
+						<span class="input-group-addon">Filter</span>
+					<input class="form-control" ng-model="searchFilter" placeholder="Search to filter" />
+				</div>
+			</div>
+			<div class="col-sm-4">
+				<div class="input-group">
+					<span class="input-group-addon">Limit</span>
+					<input class="form-control" ng-model="searchLimit" ng-init="searchLimit = 25" type="number"/>
+				</div>
+			</div>
+		</div>
+		<accordion close-others="oneAtATime">
+			<!-- hard code default -->
+			<accordion-group is-open="isopen">
+				<accordion-heading>
+					Default
+					<i class="expander pull-right fa button-heading" ng-class="{'fa-chevron-down': isopen, 'fa-chevron-right': !isopen}"></i>
+				</accordion-heading>
+				<div class="content">
+					<h4>
+						<button class="btn btn-sm btn-default" ng-click="selectTheme('default')"><i class="fa fa-plus"></i></button>
+						Default Theme
+						<em>(1-column)</em>
+					</h4>
+				</div>
+			</accordion-group>
+			<!-- find installed -->
+			<accordion-group ng-repeat="theme in themes | orderBy:'name' | filter:searchFilter | limitTo:searchLimit" is-open="isopen">
+				<accordion-heading>
+					{{theme.name}}
+					<i class="expander pull-right fa" ng-class="{'fa-chevron-down': isopen, 'fa-chevron-right': !isopen}"></i>
+				</accordion-heading>
+				<div class="content">
+					<h3>{{theme.name}}</h3>
+					<p>{{theme.description}}</p>
+					<p><em>Created by: {{theme.handle}}</em></p>
+					<div class="theme-block" ng-repeat="l in theme.layouts | orderBy:'layout'">
+						<h4>
+							<button class="btn btn-sm btn-primary" ng-click="selectTheme(l)"><i class="fa fa-plus"></i></button>
+							{{l.layout}}
+						</h4>
+						<table class="table table-condensed table-striped table-bordered">
+							<tbody>
+								<tr><td>Version</td><td>{{l.version}}</td></tr>
+								<tr><td>Created</td><td>{{l.created * 1000 | date:'EEE, MMM d, y'}}</td></tr>
+								<tr><td>Menus</td><td><span ng-repeat="menu in l.menus">{{($index > 0 ? ', ' + menu : menu)}}</span></td></tr>
+								<tr><td>Header Columns</td><td>{{l.content.header}}</td></tr>
+								<tr><td>Main Columns</td><td>{{l.content.main}}</td></tr>
+								<tr><td>Footer Columns</td><td>{{l.content.footer}}</td></tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div ng-if="(themeDetails | filter:{'handle': theme.handle, 'extension': theme.extension})[0].images.length > 0">
+						<h3>Screenshots</h3>
+						<button class="btn btn-default" ng-repeat="img in (themeDetails | filter:{'handle': theme.handle, 'extension': theme.extension})[0].images" ng-click="$parent.screenshot = img" style="margin: 0 5px 5px 0;">{{$index + 1}}</button>
+						<img ng-src="{{screenshot}}" width="100%" ng-init="screenshot = (themeDetails | filter:{'handle': theme.handle, 'extension': theme.extension})[0].images[0]">
+					</div>
+				</div>
+			</accordion-group>
+		</accordion>
+	</div>
+</div>

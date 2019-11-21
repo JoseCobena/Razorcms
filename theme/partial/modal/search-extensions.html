@@ -1,0 +1,56 @@
+<div class="modal-header">
+	<h3>Install Extensions <i class="fa fa-times pull-right" ng-click="cancel()"></i></h3>
+</div>
+<div class="modal-body">
+	<div class="accordian" ng-controller="searchExtensionsAccordion">
+		<div class="filter row">
+			<div class="col-sm-8">
+				<div class="input-group">
+						<span class="input-group-addon">Filter</span>
+					<input class="form-control" ng-model="searchFilter" placeholder="Search to filter" />
+				</div>
+			</div>
+			<div class="col-sm-4">
+				<div class="input-group">
+					<span class="input-group-addon">Limit</span>
+					<input class="form-control" ng-model="searchLimit" ng-init="searchLimit = 25" type="number"/>
+				</div>
+			</div>
+		</div>
+		<div class="text-center" ng-if="!repo">
+			<i class="fa fa-refresh fa-spin fa-5x"></i>
+		</div>
+		<accordion close-others="oneAtATime" ng-if="repo">
+			<accordion-group ng-repeat="ext in repo.extensions | orderBy:['type', 'extension'] | filter:searchFilter | limitTo:searchLimit" is-open="isopen">
+				<accordion-heading ng-click="getExtensionDetails(ext)">
+					<i class="category-icon fa fa-fw" ng-class="(cats.categories | filter:ext.type:name)[0].icon"></i>
+					{{ext.displayName}}
+					<i class="expander pull-right fa" ng-class="{'fa-chevron-down': isopen, 'fa-chevron-right': !isopen}"></i>
+				</accordion-heading>
+				<div class="content">
+					<div class="loader" ng-if="isopen" ng-init="getExtensionDetails(ext)"></div>
+
+					<div class="text-center" ng-if="!extensionDetails">
+						<i class="fa fa-refresh fa-spin fa-5x"></i>
+					</div>
+
+					<div class="extension-info" ng-if="extensionDetails">
+						<button class="btn btn-primary pull-right" ng-click="installExtension(ext)"><i class="fa fa-cogs"></i> Install</button>
+						<p><strong class="extension-detail-label">Name</strong> {{extensionDetails.extension}}</p>
+						<p><strong class="extension-detail-label">Type</strong> {{extensionDetails.type}}</p>
+						<p><strong class="extension-detail-label">Author</strong> {{extensionDetails.handle}} <i>({{extensionDetails.author}})</i></p>
+						<p><strong class="extension-detail-label">Version</strong> {{extensionDetails.version}}</p>
+						<p ng-if="extensionDetails.type == 'theme'"><strong class="extension-detail-label">Layouts</strong> {{ext.manifests.length}}</p>
+						<p>{{extensionDetails.description}}</p>
+					</div>
+
+					<div ng-if="ext.images.length > 0 && extensionDetails">
+						<p><strong>Screenshots</strong></p>
+						<button class="btn btn-default" ng-repeat="img in ext.images" ng-click="$parent.screenshot = img" style="margin: 0 5px 5px 0;">{{$index + 1}}</button>
+						<img ng-src="{{screenshot}}" width="100%" ng-init="screenshot = ext.images[0]">
+					</div>
+				</div>
+			</accordion-group>
+		</accordion>
+	</div>
+</div>

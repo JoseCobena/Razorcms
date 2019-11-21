@@ -1,0 +1,145 @@
+<div class="razor-admin-profile">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="accordian" ng-controller="userListAccordion" ng-if="user.access_level == 10">
+				<div class="filter row">
+					<div class="col-sm-3">
+						<button class="btn btn-primary" ng-click="createUser()" ng-disabled="user.access_level !== 10"><i class="fa fa-users"></i> Create User</button>
+					</div>
+					<div class="col-sm-6">
+						<div class="input-group">
+	  						<span class="input-group-addon">Filter</span>
+							<input class="form-control" ng-model="searchFilter" placeholder="Search to filter" />
+						</div>
+					</div>
+					<div class="col-sm-3">
+						<div class="input-group">
+							<span class="input-group-addon">Limit</span>
+							<input class="form-control" ng-model="searchLimit" ng-init="searchLimit = 50" type="number"/>
+						</div>
+					</div>
+				</div>
+				<accordion close-others="oneAtATime">
+					<accordion-group ng-repeat="u in users | orderBy:'id' | filter:searchFilter | limitTo:searchLimit" is-open="isopen">
+						<accordion-heading>
+	   						<i class="fa fa-user" ng-show="u.id == user.id" title="Active"></i>
+	   						<i class="fa fa-check" ng-show="u.active"></i>
+	   						<i class="fa fa-ban" ng-hide="u.active"></i>
+							{{u.name}}
+							<i class="expander pull-right fa" ng-class="{'fa-chevron-down': isopen, 'fa-chevron-right': !isopen}"></i>
+						</accordion-heading>
+						<div class="content">
+							<div class="row">
+								<div class="col-sm-12">
+									<form name="form" class="form-horizontal" role="form" novalidate>
+										<div class="form-group">
+											<label class="col-sm-2 control-label">ID</label>
+											<div class="col-sm-10">
+												<span class="span-input">{{u.id}}</span>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="input-name" class="col-sm-2 control-label">Name</label>
+											<div class="col-sm-7">
+												<input type="text" class="form-control" id="input-name" name="name" ng-model="u.name" ng-disabled="user.id != u.id" required>
+											</div>
+											<div class="col-sm-2 error-block" ng-show="form.name.$dirty && form.name.$invalid">
+												<span class="alert alert-danger alert-form" ng-show="form.name.$error.required">Required</span>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="input-email" class="col-sm-2 control-label">Email</label>
+											<div class="col-sm-7">
+												<input type="email" class="form-control" id="input-email" name="email" ng-model="u.email_address" ng-disabled="user.id != u.id" required>
+											</div>
+											<div class="col-sm-2 error-block" ng-show="form.email.$dirty && form.email.$invalid">
+												<span class="alert alert-danger alert-form" ng-show="form.email.$error.required">Required</span>
+												<span class="alert alert-danger alert-form" ng-show="form.email.$invalid">Invalid</span>
+											</div>
+										</div>
+										<div class="form-group" ng-if="user.id == u.id">
+											<label for="new-password" class="col-sm-2 control-label">New Password</label>
+											<div class="col-sm-3">
+												<input id="new-password" name="newPassword" class="form-control" type="password" ng-model="u.new_password" placeholder="Leave blank to keep same">
+											</div>
+											<label for="repeat-password" class="col-sm-1 control-label">Repeat</label>
+											<div class="col-sm-3">
+												<input id="repeat-password" name="repeatPassword" class="form-control" type="password" ng-model="u.repeat_password" placeholder="Leave blank to keep same" confirm="{{u.new_password}}">
+											</div>
+											<div class="col-sm-2 error-block" ng-show="(form.newPassword.$dirty && form.newPassword.$invalid) || (form.repeatPassword.$dirty && form.repeatPassword.$invalid)">
+												<span class="alert alert-danger alert-form" ng-show="form.newPassword.$error.pattern">Invalid</span>
+												<span class="alert alert-danger alert-form" ng-show="form.repeatPassword.$error.confirm">Miss match</span>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="input-active" class="col-sm-2 control-label">Active</label>
+											<div class="col-sm-10">
+												<slide-switch rzr-model="u.active" rzr-disabled="user.id == u.id || user.access_level < 10"></slide-switch>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="input-access-level" class="col-sm-2 control-label">Access Level</label>
+											<div class="col-sm-2">
+												<select ng-if="u.access_level < 10" class="form-control" id="input-access-level" ng-model="u.access_level" ng-options="al.value as al.name for al in accessLevels" ng-disabled="user.id == u.id || user.access_level < 10" required></select>
+												<span ng-if="u.access_level == 10" class="span-input">Super Admin</span>
+											</div>
+											<span class="alert alert-danger alert-form" ng-if="u.access_level == 9">
+												Admin access to everything accept altering users.
+											</span>
+											<span class="alert alert-warning alert-form" ng-if="u.access_level == 8">
+												Admin access to create, edit and delete content.
+											</span>
+											<span class="alert alert-warning alert-form" ng-if="u.access_level == 7">
+												Admin access to create, edit content.
+											</span>
+											<span class="alert alert-warning alert-form" ng-if="u.access_level == 6">
+												Admin access create content.
+											</span>
+											<span class="alert alert-success alert-form" ng-if="u.access_level == 5">
+												Public access to level 5 pages.
+											</span>
+											<span class="alert alert-success alert-form" ng-if="u.access_level == 4">
+												Public access to level 4 pages.
+											</span>
+											<span class="alert alert-success alert-form" ng-if="u.access_level == 3">
+												Public access to level 3 pages.
+											</span>
+											<span class="alert alert-success alert-form" ng-if="u.access_level == 2">
+												Public access to level 2 pages.
+											</span>
+											<span class="alert alert-success alert-form" ng-if="u.access_level == 1">
+												Public access to level 1 pages.
+											</span>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-2 control-label">IP Address</label>
+											<div class="col-sm-10">
+												<span class="span-input">{{u.ip_address}}</span>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-2 control-label">Last Logged In</label>
+											<div class="col-sm-10">
+												<span class="span-input">{{u.last_logged_in * 1000 | date:'EEE, MMM d, y h:mm a'}}</span>
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="col-sm-10 col-sm-offset-2">
+												<button class="btn btn-success" ng-click="saveUser($index)" ng-disabled="form.$invalid || processing || (!!u.new_password && !u.repeat_password)">
+													<i class="fa fa-check"></i> Save Changes
+												</button>
+												<button class="btn btn-danger" ng-if="u.id != 1" ng-disabled="u.active || processing" ng-click="removeUser($index)">
+													<i class="fa fa-trash-o"></i> Remove User
+												</button>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</accordion-group>
+				</accordion>
+			</div>
+		</div>
+	</div>
+</div>

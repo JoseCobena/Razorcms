@@ -1,0 +1,42 @@
+# razorCMS default access file - smiffy6969 - www.razorcms.co.uk - ulsmith.net
+
+IndexIgnore .htaccess */.??* *~ *# */HEADER* */README* */_vti*
+
+Options -Indexes
+
+<Limit GET POST>
+order deny,allow
+deny from all
+allow from all
+</Limit>
+
+<Limit PUT DELETE>
+order deny,allow
+deny from all
+</Limit>
+
+<Files ~ "\.sqlite$">
+Order allow,deny
+Deny from all
+</Files>
+
+<Files index>
+ForceType application/x-httpd-php
+</Files>
+
+AddType video/ogv .ogv
+AddType video/mp4 .mp4
+AddType video/webm .webm
+AddType audio/ogg .ogg
+AddType audio/mp3 .mp3
+AddType audio/m4a .m4a
+AddType image/svg+xml svg
+
+DirectoryIndex index.html index.htm index.php index default.html default.htm default.php default
+
+RewriteEngine On
+RewriteRule ^sitemap_index.xml rars/seo/sitemap [L,QSA]
+RewriteRule ^sitemap([0-9]*).xml rars/seo/sitemap/$1 [L,QSA]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?path=$1 [L,QSA]

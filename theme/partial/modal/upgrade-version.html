@@ -1,0 +1,48 @@
+<div class="modal-header">
+	<h3>Upgrade razorCMS <i class="fa fa-times pull-right" ng-click="cancel()"></i></h3>
+</div>
+<div class="modal-body">
+	<p class="alert alert-info text-center" ng-hide="upgrading"><i class="fa fa-exclamation-circle"></i> Please note, any customisations to system code, will be overwritten.</p>
+	<div class="text-center">
+		<button class="btn btn-lg btn-primary" ng-hide="upgrading" ng-click="downloadVersion()"><i class="fa fa-gears"></i> Start Upgrade</button>
+		<a ng-href="{{backupLink}}" class="btn btn-default" ng-show="backupAvailable" ng-disable="!backupLink"><i class="fa fa-download"></i> Download System Backup</a>
+		<button class="btn btn-primary" ng-show="backupAvailable" ng-click="continueUpgrade()"><i class="fa fa-check"></i> Continue</button>
+		<button class="btn btn-success" ng-show="upgrading == 7" ng-click="hardReload()"><i class="fa fa-refresh"></i> Upgrade Complete, Refresh in <span class="seconds-counter">20</span> sec</button>
+	</div>
+	<div class="text-center progress-box" ng-show="stage < 6">
+		<span class="progress-ring ring-5" ng-class="{'ring-pulse': stage == 5, 'ring-active': stage > 5}">
+			<span class="progress-ring ring-4" ng-class="{'ring-pulse': stage == 4, 'ring-active': stage > 4}">
+				<span class="progress-ring ring-3" ng-class="{'ring-pulse': stage == 3, 'ring-active': stage > 3}">
+					<span class="progress-ring ring-2" ng-class="{'ring-pulse': stage == 2, 'ring-active': stage > 2}">
+						<span class="progress-ring ring-1" ng-class="{'ring-pulse': stage == 1, 'ring-active': stage > 1}">{{stage}}</span>
+					</span>
+				</span>
+			</span>
+		</span>
+	</div>
+	<p ng-show="upgrading == 1" class="upgrade-message text-center">
+		<i>Downloading version {{getVersion().cur.version}}.{{getVersion().cur.milestone}}.{{getVersion().cur.release}}.</i>
+	</p>
+	<p ng-show="upgrading == 2" class="upgrade-message text-center">
+		<i ng-hide="backupAvailable">Creating backup of system.</i>
+		<i ng-show="backupAvailable">Download backup of system if you wish, then continue.</i>
+	</p>
+	<p ng-show="upgrading == 3" class="upgrade-message text-center">
+		<i>Upgrading to version {{getVersion().cur.version}}.{{getVersion().cur.milestone}}.{{getVersion().cur.release}}.</i>
+	</p>
+	<p ng-show="upgrading == 4" class="upgrade-message text-center">
+		<i>Download the backup now if you wish to keep this, then click continue.</i>
+	</p>
+	<p ng-show="upgrading == 5" class="upgrade-message text-center">
+		<i>Finish upgrade or revert changes?</i>
+	</p>
+	<p ng-show="upgrading == 6" class="upgrade-message text-center">
+		<i>Cleaning up system files.</i>
+	</p>
+	<p ng-show="upgrading == 7" class="upgrade-message text-center">
+		<i>System upgraded to {{getVersion().cur.version}}.{{getVersion().cur.milestone}}.{{getVersion().cur.release}} succesfully.</i>
+	</p>
+	<p ng-show="upgrading == 8" class="upgrade-message text-center">
+		<i>System reverted back to {{getVersion().sys.version}}.{{getVersion().sys.milestone}}.{{getVersion().sys.release}}, please upgrade manually or consult the razorCMS forums for help with the auto upgrader, you may close this window.</i>
+	</p>
+</div>

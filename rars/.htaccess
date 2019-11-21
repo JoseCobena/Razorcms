@@ -1,0 +1,29 @@
+# PHP R.A.R.S razorCMS Athenticatable Resource Server - smiffy6969 ulsmith.net #
+
+IndexIgnore .htaccess */.??* *~ *# */HEADER* */README* */_vti*
+
+Options -Indexes
+
+<Limit GET POST PUT DELETE UPDATE>
+order deny,allow
+deny from all
+allow from all
+</Limit>
+
+<Files ~ "\.sqlite$">
+Order allow,deny
+Deny from all
+</Files>
+
+<Files index>
+ForceType application/x-httpd-php
+</Files>
+
+DirectoryIndex index.php
+
+RewriteEngine On
+RewriteRule ^login/u/(.*)/p/(.*)$ index.php?login=1&u=$1&p=$2 [L,QSA]
+RewriteRule ^login index.php?login=1 [L,QSA]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?path=$1 [E=HTTP_AUTHORIZATION:%{HTTP:Authorization},L,QSA]

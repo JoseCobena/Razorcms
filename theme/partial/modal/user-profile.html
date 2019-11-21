@@ -1,0 +1,49 @@
+<form name="form" class="form-horizontal" role="form" novalidate>
+	<div class="modal-header">
+		<h3>Update User Profile <i class="fa fa-times pull-right" ng-click="cancel()"></i></h3>
+	</div>
+	<div class="modal-body">
+		<div class="well">
+			<div class="form-group">
+				<label for="new-password" class="col-sm-3 control-label">New Password</label>
+				<div class="col-sm-5">
+					<input id="new-password" name="newPassword" class="form-control" type="password" ng-model="user.new_password" placeholder="Leave blank to keep same" >
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="repeat-password" class="col-sm-3 control-label">Repeat</label>
+				<div class="col-sm-5">
+					<input id="repeat-password" name="repeatPassword" class="form-control" type="password" ng-model="user.repeat_password" placeholder="Leave blank to keep same" confirm="{{user.new_password}}">
+				</div>
+				<div class="col-sm-3 error-block" ng-show="(form.newPassword.$dirty && form.newPassword.$invalid) || (form.repeatPassword.$dirty && form.repeatPassword.$invalid)">
+					<span class="alert alert-danger alert-form" ng-show="form.newPassword.$error.pattern">Invalid</span>
+					<span class="alert alert-danger alert-form" ng-show="form.repeatPassword.$error.confirm">Miss match</span>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="name" class="col-sm-3 control-label">Name</label>
+			<div class="col-sm-7">
+				<input id="name" name="name" class="form-control" type="text" ng-model="user.name" placeholder="Shows when logged in" required>
+			</div>
+			<div class="col-sm-2 error-block" ng-show="form.name.$dirty && form.name.$invalid">
+				<span class="alert alert-danger alert-form" ng-show="form.name.$error.required">Required</span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="email" class="col-sm-3 control-label">Email</label>
+			<div class="col-sm-7">
+				<input id="email" name="email" class="form-control" type="email" ng-model="user.email_address" placeholder="Used to log in with and contact you" required>
+			</div>
+			<div class="col-sm-2 error-block" ng-show="form.email.$dirty && form.email.$invalid">
+				<span class="alert alert-danger alert-form" ng-show="form.email.$error.required">Required</span>
+				<span class="alert alert-danger alert-form" ng-show="form.email.$invalid">Invalid</span>
+			</div>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-success" ng-click="saveUser(user)" ng-disabled="form.$invalid || processing || (!!user.new_password && !user.repeat_password)">
+			<i class="fa fa-check"></i> Update Profile
+		</button>
+	</div>
+</form>

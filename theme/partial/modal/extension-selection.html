@@ -1,0 +1,62 @@
+<div class="modal-header">
+	<h3>Select Extension <i class="fa fa-times pull-right" ng-click="cancel()"></i></h3>
+</div>
+<div class="modal-body">
+	<div class="accordian" ng-controller="extensionListAccordion">
+		<div class="filter row">
+			<div class="col-sm-8">
+				<div class="input-group">
+						<span class="input-group-addon">Filter</span>
+					<input class="form-control" ng-model="searchFilter" placeholder="Search to filter" />
+				</div>
+			</div>
+			<div class="col-sm-4">
+				<div class="input-group">
+					<span class="input-group-addon">Limit</span>
+					<input class="form-control" ng-model="searchLimit" ng-init="searchLimit = 25" type="number"/>
+				</div>
+			</div>
+		</div>
+		<accordion close-others="oneAtATime">
+			<accordion-group ng-repeat="e in extensions | orderBy:['type', 'extension'] | filter:searchFilter | limitTo:searchLimit" is-open="isopen">
+				<accordion-heading>
+					<button class="btn btn-sm btn-default" ng-click="addExtension(e)"><i class="fa fa-plus"></i></button>
+					{{e.type}} - {{e.extension}}
+					<i class="expander pull-right fa button-heading" ng-class="{'fa-chevron-down': isopen, 'fa-chevron-right': !isopen}"></i>
+				</accordion-heading>
+				<div class="content">
+					<div class="content-preview">
+						<table class="table table-condensed table-striped table-bordered">
+							<tbody>
+								<tr>
+									<td>Extension</td>
+									<td>{{e.extension}}</td>
+								</tr>
+								<tr>
+									<td>Author</td>
+									<td>{{e.handle}}</td>
+								</tr>
+								<tr>
+									<td>Type</td>
+									<td>{{e.type}}</td>
+								</tr>
+								<tr>
+									<td>Version</td>
+									<td>{{e.version}}</td>
+								</tr>
+								<tr>
+									<td>Created</td>
+									<td>{{e.created * 1000 | date:'EEE, MMM d, y'}}</td>
+								</tr>
+								<tr>
+									<td>Description</td>
+									<td>{{e.description}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</accordion-group>
+		</accordion>
+	</div>
+</div>

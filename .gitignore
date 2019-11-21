@@ -1,0 +1,4 @@
+composer.*
+vendor
+library/vendor
+docker-compose.yml

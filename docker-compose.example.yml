@@ -1,0 +1,19 @@
+version: '2'
+services:
+  razor:
+    image: ulsmith/razorcms
+    environment:
+      - MAILGUN_KEY=...
+      - MAILGUN_DOMAIN=...
+      - MAILGUN_MAILER_ADDRESS=...
+    labels:
+      - "traefik.backend=razor"
+      - "traefik.frontend.rule=Host:razor.docker.localhost"
+    volumes:
+      - "./storage:/var/www/html/storage"
+      - "./extension:/var/www/html/extension"
+      - "./extension-api:/var/www/html/rars/api/extension"
+networks:
+  default:
+    external:
+      name: docker_docker-localhost

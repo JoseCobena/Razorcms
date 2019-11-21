@@ -1,0 +1,56 @@
+<div class="razor-admin-content" ng-init="loadContent()">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="accordian" ng-controller="contentListAccordion">
+				<div class="filter row">
+					<div class="col-sm-9">
+						<div class="input-group">
+	  						<span class="input-group-addon">Filter</span>
+							<input class="form-control" ng-model="searchFilter" placeholder="Search to filter" />
+						</div>
+					</div>
+					<div class="col-sm-3">
+						<div class="input-group">
+							<span class="input-group-addon">Limit</span>
+							<input class="form-control" ng-model="searchLimit" ng-init="searchLimit = 50" type="number"/>
+						</div>
+					</div>
+				</div>
+				<accordion close-others="oneAtATime">
+					<accordion-group ng-repeat="c in content | filter:searchFilter | limitTo:searchLimit" is-open="isopen">
+						<accordion-heading>
+	   						<i class="fa fa-eye" ng-hide="c.used_on_pages.length == 0" title="Active"></i>
+							{{c.name}}
+							<i class="expander pull-right fa" ng-class="{'fa-chevron-down': isopen, 'fa-chevron-right': !isopen}"></i>
+						</accordion-heading>
+						<div class="content">
+							<div class="btn-toolbar" role="toolbar">
+								<div class="btn-group pull-right">
+									<button class="btn btn-danger" ng-click="deleteContent(c.id)" ng-disabled="user.access_level < 8"><i class="fa fa-trash-o"></i> Delete Content</button>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-6">
+									<table class="table table-condensed table-bordered table-striped table-data">
+										<tbody>
+											<tr><td>ID</td><td>{{c.id}}</td></tr>
+											<tr>
+												<td>Used on Pages</td>
+												<td>
+													<a class="used_on_pages" ng-href="{{pageLink(uop.link)}}" ng-repeat="uop in c.used_on_pages">[{{uop.id}}] {{uop.name}}</a>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<div class="col-xs-6">
+									<div class="content-preview" ng-bind-html="loadHTML(c.content)"></div>
+								</div>
+							</div>
+						</div>
+					</accordion-group>
+				</accordion>
+			</div>
+		</div>
+	</div>
+</div>
